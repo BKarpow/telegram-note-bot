@@ -1,0 +1,12 @@
+{
+    "require": {
+        "vlucas/phpdotenv": "^5.2",
+        "eleirbag89/telegrambotphp": "^1.3"
+    },
+    "autoload": {
+        "files": [
+            "include/function.php",
+            "include/class/mysql.php"
+        ]
+    }
+}
