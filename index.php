@@ -36,6 +36,11 @@ try {
             }elseif($text === 'Додати'){
                 setStatus('ADD', $chat_id, $model_status);
                 send("Пишіть нотатку (не довше ".MAX_NOTES_LENGTH." символів) :");
+            }elseif ($text === "Всі нотатки"){
+                $notes = getNotes($chat_id, $model_data);
+                sendNotes($notes);
+            }else{
+                send(help(), getKeyboard($telegram));
             }
             break;
         case 3:

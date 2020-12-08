@@ -189,5 +189,20 @@ function addNote(string $note, string $chat_id, MySql $model)
  */
 function getNotes(string $chat_id, MySql $model)
 {
-    return $model->where('chat_id', $chat_id);
+    return (array) $model->where('chat_id', $chat_id);
+}
+
+/**
+ * Відправляє список в телеграм
+ * @param array $data
+ */
+function sendNotes(array $data)
+{
+    global $telegram;
+    foreach ($data as $datum) {
+        $n = "Нотатка № {$datum['id']}: ".PHP_EOL
+            ."{$datum['note']}".PHP_EOL.PHP_EOL
+            ."Дата: {$datum['date']}.";
+        send($n, getKeyboard($telegram, true));
+    }
 }
