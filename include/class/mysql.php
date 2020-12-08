@@ -217,7 +217,9 @@ final class MySql
 	public function delete(string $where)
 	{
 		if (empty($this->table)) $this->exception("Empty table name! Usign method MySql::setTable()", 5);
-		return $this->q("DELETE FROM `{$this->table}` WHERE ".$where);
+		$sql = "DELETE FROM `{$this->table}` WHERE ".$where;
+		log_bot($sql ,'SQL');
+		return $this->q($sql);
 	}
 
 
@@ -229,6 +231,7 @@ final class MySql
 	*/
 	private function exception(string $message, int $code = 0)
 	{
+	    log_bot($message, 'ERROR');
 		if ($this->debug){
 			throw new ErrorException($message, $code);
 			

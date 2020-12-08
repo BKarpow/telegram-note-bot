@@ -11,7 +11,7 @@ env_init();
 $model_data = new MySql('note_data');
 $model_status = new MySql('note_status');
 $telegram = new Telegram(env('TELEGRAM_BOT_TOKEN'));
-$chat_id = (env('DEBUG', false)) ? '666666' :$telegram->ChatID();
+$chat_id = $telegram->ChatID();
 $text = $telegram->Text();
 $user_name = ( $telegram->Username()) ?
         $telegram->Username() :
@@ -36,6 +36,9 @@ try {
             }elseif($text === 'Додати'){
                 setStatus('ADD', $chat_id, $model_status);
                 send("Пишіть нотатку (не довше ".MAX_NOTES_LENGTH." символів) :");
+            }elseif($text === "Видалити"){
+                setStatus('DELETE', $chat_id, $model_status);
+                send('Вкажіть номер нотатки для видалення?', getKeyboard($telegram, true));
             }elseif ($text === "Всі нотатки"){
                 $notes = getNotes($chat_id, $model_data);
                 sendNotes($notes);
@@ -51,6 +54,18 @@ try {
             addNote($text, $chat_id, $model_data);
             setStatus('WORK', $chat_id, $model_status);
             send('Додано нотатку.', getKeyboard($telegram, true));
+            break;
+        case 4:
+            if ($text === "Назад"){
+                setStatus('WORK', $chat_id, $model_status);
+                send(help(), getKeyboard($telegram));
+            }else{
+                $id = (int) $text;
+                deleteNotes($id, $chat_id, $model_data);
+                setStatus('WORK', $chat_id, $model_status);
+                send("Видалено нотатку під номером ".$id);
+                send(help(), getKeyboard($telegram));
+            }
             break;
     }
 }catch (ErrorException $e){

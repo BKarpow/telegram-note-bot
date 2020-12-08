@@ -8,6 +8,7 @@
  */
 function log_bot($text, $level = 'DEBUG', $file = 'debug.log')
 {
+    if (!env('DEBUG')) return ;
     $text = now() ." [$level]: $text ".PHP_EOL;
     file_put_contents(__ROOT .'/'.$file, $text, FILE_APPEND);
 }
@@ -22,7 +23,8 @@ function getStatusList(int $code_status = 0)
     $statuses = [
         'WORK' => 1,
         'SEARCH' => 2,
-        'ADD' => 3
+        'ADD' => 3,
+        'DELETE' => 4
     ];
     if ($code_status){
         foreach ($statuses as $status => $code) {
@@ -46,7 +48,7 @@ function getKeyboard(Telegram $telegram, bool $back = false)
         //First row
         array($telegram->buildKeyboardButton("Всі нотатки"), $telegram->buildKeyboardButton("Знайти")),
         //Second row
-        array($telegram->buildKeyboardButton("Додати"), $telegram->buildKeyboardButton("Button 4"), $telegram->buildKeyboardButton("Button 5")),
+        array($telegram->buildKeyboardButton("Додати"), $telegram->buildKeyboardButton("Видалити"), $telegram->buildKeyboardButton("Button 5")),
         //Third row
         array($telegram->buildKeyboardButton("Button 6")) );
     if ($back){
@@ -205,4 +207,16 @@ function sendNotes(array $data)
             ."Дата: {$datum['date']}.";
         send($n, getKeyboard($telegram, true));
     }
+}
+
+/**
+ * Видаляє нотатку по її ід
+ * @param int $notesId
+ * @param string $chat_id
+ * @param MySql $model
+ * @return array|bool|mixed
+ */
+function deleteNotes(int $notesId, string $chat_id, MySql $model)
+{
+    return $model->delete(' `chat_id` = "'.$chat_id.'" AND `id` = '.$notesId);
 }
