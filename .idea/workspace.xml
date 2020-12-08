@@ -7,7 +7,12 @@
         <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
       </path>
     </expand>
-    <select />
+    <select>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </select>
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5b783d95-e15a-4085-b899-9fa5b0b70b4e" name="Default Changelist" comment="">
@@ -52,7 +57,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1607368483447</updated>
-      <workItem from="1607368484570" duration="7405000" />
+      <workItem from="1607368484570" duration="16900000" />
     </task>
     <servers />
   </component>

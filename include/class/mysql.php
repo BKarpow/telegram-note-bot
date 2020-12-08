@@ -15,6 +15,7 @@ final class MySql
 	private mysqli $db;
 	public int $count = 0;
 	private string $select = '*';
+	public bool $debug = false;
 	function __construct(string $default_table = '')
 	{
 		$this->table = $default_table;
@@ -94,13 +95,14 @@ final class MySql
 
 	/**
 	* Метод додає новий запис в таблицю
+     * @param string $timestamp_column = 'date'
 	* @param array $data - ['column1' => 'value1', ....]
 	*/
 	public function insert(array $data, string $timestamp_column = 'date')
 	{
 		if (empty($this->table)) $this->exception("Empty table name! Usign method MySql::setTable()", 5);
 		if (!array_key_exists($timestamp_column, $data)){
-			$data[$timestamp_column] = date($this->format_date);
+			$data[$timestamp_column] = now();
 		}
 		$column_names = array_map( function($v){
 			return '`'. trim($v) . '`';
@@ -184,10 +186,25 @@ final class MySql
         $sql = "UPDATE `{$this->table}` SET ";
         $buf = [];
         foreach ($array_values as $column => $value){
-            $buf[] = "`$column` = '".$this->esc($value)."'";
+            $buf[] = '`'.$column.'` = '.$this->esc($value);
         }
         $sql .= join(', ', $buf);
         $sql .= " WHERE ".$where;
+        log_bot($sql, 'SQL');
+        return $this->q($sql);
+    }
+
+
+    /**
+     * Метод для пошуку по таблиці
+     * @param string $search
+     * @param string $column
+     * @return array|bool
+     */
+    public function search(string $search, string $column)
+    {
+        $sql = "SELECT {$this->select} FROM ``{$this->table}` WHERE `{$column}` = '".$this->esc($search).
+            "' ORDER BY `id` DESC";
         return $this->q($sql);
     }
 
