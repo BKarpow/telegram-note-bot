@@ -5,6 +5,8 @@ define('MAX_NOTES_LENGTH', 799);
 
 require __DIR__ . "/vendor/autoload.php";
 
+ini_set('date.timezone', env('TIMEZONE'));
+
 
 
 env_init();

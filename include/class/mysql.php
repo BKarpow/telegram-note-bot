@@ -203,8 +203,8 @@ final class MySql
      */
     public function search(string $search, string $column)
     {
-        $sql = "SELECT {$this->select} FROM ``{$this->table}` WHERE `{$column}` = '".$this->esc($search).
-            "' ORDER BY `id` DESC";
+        $sql = "SELECT {$this->select} FROM ``{$this->table}` WHERE `{$column}` LIKE '%".$this->esc($search).
+            "%' ORDER BY `id` DESC";
         return $this->q($sql);
     }
 
