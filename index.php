@@ -10,6 +10,7 @@ ini_set('date.timezone', env('TIMEZONE'));
 
 
 env_init();
+
 $model_data = new MySql('note_data');
 $model_status = new MySql('note_status');
 $telegram = new Telegram(env('TELEGRAM_BOT_TOKEN'));
@@ -44,6 +45,12 @@ try {
             }elseif ($text === "Всі нотатки"){
                 $notes = getNotes($chat_id, $model_data);
                 sendNotes($notes);
+            }elseif($text === "Скоротити url"){
+                send('Відправте url для скорочення.', getKeyboard($telegram, true));
+                setStatus('SHORT', $chat_id, $model_status);
+            }elseif($text === "Курси валют"){
+                $r = getRate();
+                send($r, getKeyboard($telegram, true));
             }else{
                 send(help(), getKeyboard($telegram));
             }
@@ -68,6 +75,19 @@ try {
                 send("Видалено нотатку під номером ".$id);
                 send(help(), getKeyboard($telegram));
             }
+            break;
+        case 5:
+            if ($text === "Назад"){
+                setStatus('WORK', $chat_id, $model_status);
+                send(help(), getKeyboard($telegram));
+            }else{
+                $short = shortUrl($text);
+                send($short);
+                setStatus('WORK', $chat_id, $model_status);
+                send("Скорочено. ");
+                send(help(), getKeyboard($telegram));
+            }
+
             break;
     }
 }catch (ErrorException $e){

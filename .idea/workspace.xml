@@ -57,7 +57,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1607368483447</updated>
-      <workItem from="1607368484570" duration="20255000" />
+      <workItem from="1607368484570" duration="27248000" />
     </task>
     <servers />
   </component>
@@ -84,6 +84,10 @@
       <screen x="0" y="193" width="1280" height="791" />
     </state>
     <state x="232" y="247" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.193.1280.791@0.193.1280.791" timestamp="1607374059771" />
+    <state x="368" y="311" key="NewPhpClassDialog" timestamp="1607437339486">
+      <screen x="0" y="193" width="1280" height="791" />
+    </state>
+    <state x="368" y="311" key="NewPhpClassDialog/0.193.1280.791@0.193.1280.791" timestamp="1607437339486" />
     <state x="474" y="512" key="NewPhpFileDialog" timestamp="1607369304062">
       <screen x="0" y="193" width="1280" height="791" />
     </state>

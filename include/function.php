@@ -24,7 +24,8 @@ function getStatusList(int $code_status = 0)
         'WORK' => 1,
         'SEARCH' => 2,
         'ADD' => 3,
-        'DELETE' => 4
+        'DELETE' => 4,
+        'SHORT' => 5
     ];
     if ($code_status){
         foreach ($statuses as $status => $code) {
@@ -48,9 +49,9 @@ function getKeyboard(Telegram $telegram, bool $back = false)
         //First row
         array($telegram->buildKeyboardButton("Всі нотатки"), $telegram->buildKeyboardButton("Знайти")),
         //Second row
-        array($telegram->buildKeyboardButton("Додати"), $telegram->buildKeyboardButton("Видалити"), $telegram->buildKeyboardButton("Button 5")),
+        array($telegram->buildKeyboardButton("Додати"), $telegram->buildKeyboardButton("Видалити"), $telegram->buildKeyboardButton("Курси валют")),
         //Third row
-        array($telegram->buildKeyboardButton("Button 6")) );
+        array($telegram->buildKeyboardButton("Скоротити url")) );
     if ($back){
         $option = [
             [$telegram->buildKeyboardButton("Назад")]
@@ -219,4 +220,47 @@ function sendNotes(array $data)
 function deleteNotes(int $notesId, string $chat_id, MySql $model)
 {
     return $model->delete(' `chat_id` = "'.$chat_id.'" AND `id` = '.$notesId);
+}
+
+/**
+ * Скорочує посилання за допомогою API new.shli.pp.ua
+ * @param string $url
+ * @return string
+ */
+function shortUrl(string $url)
+{
+    $api_url = env('SHORT_API_URL').env('SHORT_API_METHOD');
+    $req = [
+        'token' => env('SHORT_API_TOKEN'),
+        'url' => $url
+    ];
+    log_bot(var_export($req, true), 'API_REQUEST');
+    $resp = Requests::post(
+        $api_url,
+        [],
+        $req
+    );
+    log_bot(var_export($resp, true), 'API_RESPONSE');
+    $res = json_decode( $resp->body, true);
+    log_bot(var_export($res, true), 'API_RESPONSE');
+    return env('SHORT_API_URL').'/'.$res['data']['short_id'];
+}
+
+/**
+ * Поаертає список курсів валют
+ * @return string
+ */
+function getRate()
+{
+    $rates = ERateUkr::all(true);
+    $text = "Курс вадют, Goverla:".PHP_EOL;
+    foreach ($rates['goverla'] as $rate) {
+        $text .= "{$rate['name']}: купівля - {$rate['bid']}, продаж - {$rate['ask']}".PHP_EOL;
+    }
+    $text .= PHP_EOL.PHP_EOL;
+    $text .= "Курс вадют, PrivatBank:".PHP_EOL;
+    foreach ($rates['privatbank'] as $rate) {
+        $text .= "{$rate['name']}: купівля - {$rate['bid']}, продаж - {$rate['ask']}".PHP_EOL;
+    }
+    return $text;
 }

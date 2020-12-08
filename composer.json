@@ -1,12 +1,14 @@
 {
     "require": {
         "vlucas/phpdotenv": "^5.2",
-        "eleirbag89/telegrambotphp": "^1.3"
+        "eleirbag89/telegrambotphp": "^1.3",
+        "rmccue/requests": "^1.7"
     },
     "autoload": {
         "files": [
             "include/function.php",
-            "include/class/mysql.php"
+            "include/class/mysql.php",
+            "include/class/ERateUkr.php"
         ]
     }
 }
